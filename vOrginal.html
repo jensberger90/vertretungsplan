@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <title>Vertretungplan</title>
+    <meta http-equiv="refresh" content="300">
+  </head>
+
+<style>
+
+      html {
+          font-size: 18px;
+          line-height: 1.5;
+          font-weight: 400;
+          font-family: "Open Sans", sans-serif;
+      }
+
+      table {
+        width: 100%; 
+        border-collapse: collapse;
+        border-spacing: 0;
+        box-sizing: border-box;
+      }
+
+      div.vcontainer {
+        padding-right: 10%;
+        padding-left: 10%;
+        padding-top: 1%;
+      }
+
+
+      th{
+        text-align: left;
+        padding: 8px;
+        border: 1px solid black;
+      }
+
+      td {
+        text-align: left;
+        border: 1px solid black;  
+        padding: 8px;
+      }
+
+      td.hinweisTitel {
+        text-align: left;
+        padding: 8px;
+        /*width: 25%;*/
+        font-weight: bold;
+        padding-left: 8px;
+        background-color: transparent;
+      }
+
+      td.hinweisText {
+        text-align: left;
+        padding: 8px;
+        /*width: 75%;*/
+        padding-left: 8px;
+        background-color: transparent;
+      }
+
+      table tr:last-child td {
+      padding-bottom: 8px; }
+
+      tr:first-child {
+        background-color: #d9d9d9;
+      }
+
+      /* tr:nth-child(even) {background-color: #f2f2f2;} */
+
+      tr.trhinweise {
+                background-color: transparent;
+
+      }
+
+      tr.uncolored {
+                background-color: transparent;
+                padding-left: 0px;
+      }
+
+      tr.theader {
+                background-color: #d9d9d9;
+      }
+
+      div.week {
+                        
+
+      }
+
+      td.stunde {width: 7%;padding: 8px;}
+      td.klasse {width: 15%;padding: 8px;}
+      td.fach {width: 5%;padding: 8px;}
+      td.vfach {width: 8%;padding: 8px;}
+      td.lehrer {width: 15%;padding: 8px;}
+      td.vlehrer {width: 15%;padding: 8px;}
+      td.kommentar {width: 35%;padding: 8px;}
+      
+      td.tag {padding: 8px;font-weight: bold;         text-align: center;}
+      td.hinweise {padding: 8px;font-weight: bold;         text-align: center;}
+
+      th.stunde {width: 7%;padding: 8px;}
+      th.klasse {width: 15%;padding: 8px;}
+      th.fach {width: 5%;padding: 8px;}
+      th.vfach {width: 8%;padding: 8px;}
+      th.lehrer {width: 15%;padding: 8px;}
+      th.vlehrer {width: 15%;padding: 8px;}
+      th.kommentar {width: 35%;padding: 8px;}
+      
+      tr.grey {background-color: #f2f2f2;}
+      tr.white {background-color: transparent;}
+
+      .blinking {
+        animation: blinker 1s linear infinite;
+      }
+
+      @keyframes blinker {
+        from,
+        49.9% {
+          opacity: 1;
+        }
+        50%,
+        to {
+          opacity: 0;
+        }
+      }
+
+#news-bar {
+  left: 0px;
+  width: 100%;
+  background:         #BE155D;
+/*rgba(255, 255, 255, 0.7);
+  /*box-shadow: 0 4px 10px black, 0 0 10px black inset;
+  border-radius: 15px;*/
+  font: 21px bold;
+  padding: 8px;
+  /*padding-left: 20px;
+  padding-right: 20px;*/
+}
+
+#news-bar:hover {
+  transition: 0.37s;
+}
+
+#news-bar a {
+  color: white;
+  text-decoration: none;
+  font-size: 36px;
+  line-height: 1.5;
+  font-weight: 400;
+  font-family: "Open Sans", sans-serif;
+  /*text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 4px black;*/
+}
+
+
+ .Woche {
+  font-size: 36px;
+ }
+
+  .footer{
+    position: fixed;
+    bottom: 0;
+    display: flex;
+  }
+
+  .time {
+    padding-right: 9px;
+    padding-left: 9px;
+    border-right-width: 1.5;
+    border-right: solid;
+    border-right-color: white;
+    display: flex;
+    margin-right: 15px;
+  }
+
+  .newsWoche {
+    padding-right: 10px;
+  }
+
+  #currentTime {
+    padding-left: 9px;
+    padding-right: 9px;
+    border-left-width: 1.5;
+    border-left: solid;
+    border-left-color: white;
+    display: flex;
+    margin-left: 15px;
+    margin-right: 5px;
+
+  }
+
+
+</style>
+
+<body>
+
+<script type="text/javascript">
+
+      function ConvertDateInSchoolLesson(dateStr){
+        //ISO 8160
+        var event = new Date(dateStr);
+        newStr = "";
+        str = "";
+
+        lessondata = [new Date(0,0,1,1,8,15),new Date(0,0,1,1,9,0),new Date(0,0,1,1,10,5),new Date(0,0,1,1,10,50),new Date(0,0,1,1,12,20),new Date(0,0,1,1,13,5),new Date(0,0,1,1,14,0),new Date(0,0,1,1,14,45)];
+
+        lesson = ["8.15","9.00","10.05","10.50","12.20","13.05","14.00","14.45"];
+        
+        var i = 0;
+        for( i = 0; i < 8; i++){
+          //str = event.getUTCHours()+2+"."+String(midR("00"+event.getUTCMinutes(),2));
+          if(event.getMinutes() == lessondata[i].getMinutes() && lessondata.getSeconds() == lessondata[i].getSeconds()) {
+            newStr = i+1;
+            return newStr;
+          }
+        }
+
+        var i = 0;
+        for( i = 0; i < 8; i++){
+          str = event.getUTCHours()+2+"."+String(midR("00"+event.getUTCMinutes(),2));
+          if(String(str) == lesson[i]) {
+            newStr = i+1;
+            return newStr;
+          }
+        } 
+
+        return 0
+      }
+
+      function donnerstag(datum) { // Anm. 5
+        var Do=new Date();
+        Do.setTime(datum.getTime() + (3-((datum.getDay()+6) % 7)) * 86400000); // Anm. 3
+        return Do;
+      }
+
+      function addDays(date, days) {
+        var result = new Date(date);
+        result.setDate(result.getDate() + days);
+      }
+
+
+      function getKalenderWoche(DoDat){
+        kwjahr=DoDat.getFullYear();
+        DoKW1=donnerstag(new Date(kwjahr,0,4)); // Anm. 2
+        kw=Math.floor(1.5+(DoDat.getTime()-DoKW1.getTime())/86400000/7) // Anm. 3, 4
+
+        return kw
+      }
+
+      function getWeekAoB(DoDat){
+
+        //Daten der Sommerferien von 2018 bis 2024 Achtung!! nicht der letzte Ferientag sondern der erste Schulltag muss hier stehen
+        var data = JSON.parse('{"holidays":[{"firstDay":"2018-08-13","schoolYear":"2018/19"}, {"firstDay":"2019-08-19","schoolYear":"2019/20"}, {"firstDay":"2020-08-31","schoolYear":"2020/21"}, {"firstDay":"2021-09-06","schoolYear":"2021/22"},{"firstDay":"2022-08-29","schoolYear":"2022/23"},{"firstDay":"2023-08-21","schoolYear":"2023/24"},{"firstDay":"2024-08-01","schoolYear":"2024/25"}]}');
+        
+        var today = DoDat //aktuelles Datum
+
+        var i = 0;
+        //Alle Einträge im Json Objekt werden von hinten nach vorne (2024 bis 2018) durchlaufen, um zu prüfen welches Schuljahr aktuell ist   
+        for(i = data.holidays.length-1; i > -1; i--){ 
+          if(today.getTime() > new Date(data.holidays[i].firstDay).getTime()){
+              var FirstWK = getKalenderWoche(new Date(data.holidays[i].firstDay)); //Kalenderwoche am ersten Schulltag
+              var aktuallWK = getKalenderWoche(today); //Die Aktuelle Kalenderwoche
+              var lastWK = getKalenderWoche(new Date(new Date(data.holidays[i].firstDay).getFullYear(),11,30)); //Kalenderwoche am Jahresende (meist 52)
+
+              var realWK = aktuallWK - FirstWK; //Different aus der aktuellen und der WK am ersten Schultag
+
+              //Prüfen ob der aktuelle Tag in einem anderen Jahr liegt als der erste Schulltag
+              if(today.getFullYear() > new Date(data.holidays[i].firstDay).getFullYear()){
+                //Falls ja, dann wird nicht die direkte Differennt genommen sondern die im letzten Jahr vergangen WKs auf die aktuelle drauf addiert
+                realWK = (lastWK - FirstWK) + aktuallWK
+              }
+
+
+              break; 
+          }
+        }
+
+        var aob = "";
+
+        //Jede zweite WK ist eine B-Woche
+        if(realWK % 2 == 0){
+          aob = "A-Woche"
+        }else{
+          aob = "B-Woche"
+        }
+
+        //Der Ausgabe String besteht aus WK + (WK als Zahl) A/B - Woche
+        kw=aob //getKalenderWoche(DoDat) + " " + 
+
+
+        return kw
+      }
+
+
+
+
+      function midL(str,num){
+        return str.slice(0,num);
+      }
+
+      function midR(str,num ){
+        return str.slice(str.length-num,str.length);
+      }
+
+      function getDate(iso,days){
+        var i = 0
+        for(i=1; i<4; i++){
+
+
+          if(iso.getUTCDate() == new Date(midL(days[i-1],10)).getUTCDate()){
+            return i
+          }
+        }
+      }
+
+      function isAusfall(arg){
+        if(arg == null){
+          return " "
+        } else {
+          return arg
+        }
+      }
+
+      var x, txt = "";
+
+      function Get(yourUrl){
+        var Httpreq = new XMLHttpRequest(); // a new request
+        Httpreq.open("GET",yourUrl,false);
+        Httpreq.send(null);
+        return Httpreq.responseText;
+      }
+
+      function dateHeaderFormated(dateIsoStr){
+        var well = ""
+
+        var wochentage = ["Sonntag","Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag","Samstag"]
+        var date = new Date(dateIsoStr)
+        well = wochentage[date.getDay()]
+        well += ", " + String(midR("00"+date.getUTCDate(),2))
+        well += "." + String(midR("00"+(date.getMonth()+1),2))
+        well += "." + date.getUTCFullYear()
+
+        return well;
+      }
+
+
+
+      //var json_obj = JSON.parse(data);
+      var json_obj = JSON.parse(Get('https://lernwelten-schule.a4.school/api/api/Substitution/GetDataWeb'));
+      var classnames = new Array(json_obj.days.length);
+      var lessons = new Array(json_obj.days.length);
+      var lessdata = new Array(json_obj.days.length);
+
+      for (var i = 0; i < json_obj.substitutions.length; i++) {
+        console.log(json_obj.substitutions[i].oldClasses)
+       }
+
+
+      var z = 0;
+      var z1 = 0;
+      for(z = 0; z < json_obj.days.length; z++){
+        classnames[z] = new Array();
+        lessons[z] = new Array();
+        lessdata[z] = new Array();
+      }
+
+      var ic = 0; //i für classes
+      var id = 0; //i für days
+      var il = 0; //i für lesson
+      var zl = 0; //zaehler für classes
+      var zc = 0; //zaehler für lessons
+
+      //Days
+      for(id = 0; id < json_obj.days.length; id++){
+
+        //Classes
+        for(ic = 0; ic < json_obj.substitutions.length; ic++){
+          
+          //Nur wenn diese Klasse auch an dem Tag Vertretung hat, also ein Eintrag mit passendem Datum vorhanden ist, wird sie dem Array hinzugefügt
+          if(new Date(midL(json_obj.days[id],10)).getTime() == new Date(midL(json_obj.substitutions[ic].start,10)).getTime()){
+            //Doppelte Einträge werden nicht berücksichtigt
+            if(!classnames[id].includes(json_obj.substitutions[ic].oldClasses[0].name)){
+              lessons[id][zc] = new Array()
+              lessdata[id][zc] = new Array();
+
+              classnames[id][zc] = json_obj.substitutions[ic].oldClasses[0].name
+              zc = zc + 1
+
+
+            }             
+
+          }
+
+        }
+
+        zc = 0
+      }
+          
+      //Sortieren
+      for(i in classnames){
+        classnames[i].sort()
+        //console.log(classnames)
+      }
+
+      ic = 0
+      id = 0
+      var cl = 0;
+
+      for(id = 0; id < json_obj.days.length; id++){
+        for(ic = 0; ic < classnames[id].length; ic++){
+          for(il = 0; il < json_obj.substitutions.length; il++){
+            //Datum prüfen
+            if(new Date(midL(json_obj.days[id],10)).getTime() == new Date(midL(json_obj.substitutions[il].start,10)).getTime()){
+              //Klasse prüfen
+
+
+
+                if(json_obj.substitutions[il].oldClasses.length > 1){
+                  for(cl = 0; cl < json_obj.substitutions[il].oldClasses.length; cl++){
+                    
+                    //console.log(json_obj.substitutions[il].oldClasses[cl].name + " " + classnames[id][ic] +" "+ ic + " " + cl + " " + il)
+                    //console.log(json_obj.substitutions[il].oldClasses)
+
+                    if(json_obj.substitutions[il].oldClasses[cl].name == classnames[id][ic]){
+                      lessons[id][ic][zl] = ConvertDateInSchoolLesson(json_obj.substitutions[il].start);
+                      lessdata[id][ic][zl] = json_obj.substitutions[il]
+                      lessdata[id][ic][zl].oldClasses[0].name = lessdata[id][ic][zl].oldClasses[cl].name
+                      
+
+                      zl = zl + 1
+
+                    }
+                  }
+
+                  
+                }else{
+                   if(json_obj.substitutions[il].oldClasses[0].name == classnames[id][ic]){
+                      lessons[id][ic][zl] = ConvertDateInSchoolLesson(json_obj.substitutions[il].start);
+                      lessdata[id][ic][zl] = json_obj.substitutions[il]
+                      //console.log(lessdata[id][ic][zl])
+
+                      zl = zl + 1
+
+
+                  }
+                }
+ 
+                //var cl = 0;
+                //for(cl = 0; cl < json_obj.substitutions[il].oldClasses.length; cl++){
+                 
+                //}
+
+            }
+          }
+          zl = 0
+        }
+      }
+
+      //Sortieren
+      for(id in lessons){
+        for(ic in lessons[id]){
+          lessons[id][ic].sort()
+          //console.log(lessdata)
+        }      
+      }
+
+      ic = 0
+      id = 0
+      var statement = false;
+
+      for(id = 0; id < json_obj.days.length; id++){
+        for(ic = 0; ic < classnames[id].length; ic++){
+          for(il = 0; il < json_obj.substitutions.length; il++){
+            //Datum prüfen
+            if(new Date(midL(json_obj.days[id],10)).getTime() == new Date(midL(json_obj.substitutions[il].start,10)).getTime()){
+              //Klasse prüfen
+              if(json_obj.substitutions[il].oldClasses[0].name == classnames[id][ic]){
+                
+
+                //PRÜFEN OB STUNDE MIT MEHREREN KLASSEN
+                //if(lessdata[id][ic][zl].oldClasses.length > 1){
+                  //console.log("moin")
+                //}
+
+                //PRÜFEN OB BLOCK
+                statement = (lessons[id][ic].includes((parseInt(lessons[id][ic][zl])+1)) && parseInt(lessons[id][ic][zl]) % 2 != 0  && lessdata[id][ic][zl].oldSubject == lessdata[id][ic][zl+1].oldSubject && lessdata[id][ic][zl].oldTeachers[0].name == lessdata[id][ic][zl+1].oldTeachers[0].name && lessdata[id][ic][zl].newSubject == lessdata[id][ic][zl+1].newSubject)
+                if( statement && (lessdata[id][ic][zl].newTeachers.length == lessdata[id][ic][zl+1].newTeachers.length) && JSON.stringify(lessdata[id][ic][zl].newTeachers) == JSON.stringify(lessdata[id][ic][zl+1].newTeachers) && lessdata[id][ic][zl].type == lessdata[id][ic][zl+1].type ){
+                  //                      Altes Fach                                                              alter lehrer                                                                              neues Fach  
+
+                    //Fall prüfen gleicher Block aber mit Lehrerwechsel bei 1h
+                    lessons[id][ic][zl] = lessons[id][ic][zl] + "./"+ lessons[id][ic][zl+1]+"."
+                    lessons[id][ic][zl+1] = "*"+lessons[id][ic][zl+1]
+                    
+                    if(lessdata[id][ic][zl].comment == null) {lessdata[id][ic][zl].comment = lessdata[id][ic][zl+1].comment}
+                
+
+
+                  //Ist ein Block
+
+                }else{
+                  lessons[id][ic][zl] = lessons[id][ic][zl] +"."
+                }
+
+
+                
+                zl = zl + 1
+                statement = false;
+              }
+
+            }
+          }
+          zl = 0
+        }
+      }
+
+      function justText(str) {
+
+
+        return "";
+      }
+
+      function formated (str) {
+        
+
+        return "";
+      }
+
+      //var htmltxt = "";
+      //var txttabs = new Array(json_obj.days.length);
+      //var txt
+      var x, txt, y, r,txtstab0, txthead = "";
+  
+      var days = json_obj.days
+      //console.debug(days)
+
+      var txts = ["","",""]
+          
+          txtstab0 = ""
+
+          //txtstab0 += "<h4 class='Woche'>"+ getWeekAoB(new Date(midL(days[0],10)))+"</h4>"
+          if(json_obj.replacementHints.length > 0){
+
+              txtstab0 += "<table>";
+              txtstab0 += "<tr>";
+              txtstab0 += "<td class = 'hinweise' colspan = 2>" +"Allgemeine Hinweise" + "</td>";
+
+              txtstab0 += "</tr>";         
+              for(r in json_obj.replacementHints){
+
+                //Überprüfen ob des replaymentHit heute ist
+                if(new Date(midL(days[0],10)).getTime() >= new Date(midL(json_obj.replacementHints[r].from,10)).getTime() && new Date(midL(days[0],10)).getTime() <= new Date(midL(json_obj.replacementHints[r].to,10)).getTime()){
+
+                  txtstab0 += "<tr class='uncolored'>";
+                  txtstab0 += "<td class = 'hinweisTitel'>" +json_obj.replacementHints[r].title + "</td>";
+                  txtstab0 += "<td class = 'hinweisText'>" +(json_obj.replacementHints[r].text) + "</td>";
+
+                  txtstab0 += "</tr>";
+
+
+                }
+
+              }
+              txtstab0 += "</table>";
+          }
+
+
+         txthead = ""
+
+          txthead += "<table '>"
+          txthead += "<tr class='theader'>"
+          txthead += "<th class='klasse'> Klasse </th>"
+          txthead += "<th class='stunde'> Stunde </th>"
+          txthead += "<th class='fach'> Fach </th>"
+          txthead += "<th class='lehrer'> Lehrer </th>"
+          txthead += "<th class='vfach'> V.-Fach </th>"
+          txthead += "<th class='vlehrer'> V.-Lehrer </th>"
+          txthead += "<th class='kommentar'> Kommentar </th>"
+          txthead += "</tr>"
+          txthead += "</table>"
+
+      i = 0
+      r = 0
+      z = 0
+
+      var isBlock = false;
+      var z4 = 0;
+      var z1 = 0
+
+      for(i=0;i<classnames.length;i++){
+
+
+          txts[i] += "<table>"
+         // txts[i] += "<tbody>"
+
+          if(lessons[i].length > 0){
+            txts[i] += "<tr>";
+
+            txts[i] += "<td colspan = '7' class = 'tag'>" + dateHeaderFormated(midL(json_obj.days[i],10)) + "</td>";
+            txts[i] += "</tr>";
+          }
+
+
+          for (x in classnames[i]) {
+
+
+            for(r=0;r< lessons[i][x].length;r++){// in lessons[i][x]) {
+              
+              if(midL(lessons[i][x][r],1) != "*"){
+                
+                //Jede zweite Klasse wird weiß gelassen
+                if((z1%2) == 0) {txts[i] += "<tr class='grey'>"; } else {
+                  txts[i] += "<tr class = 'white'>";
+                }
+                
+
+                if(r==0){txts[i] += "<td class = 'klasse'>" + classnames[i][x] + "</td>";}else{txts[i] += "<td class = 'klasse'>" + "" + "</td>";}
+                txts[i] += "<td class = 'stunde'>" + lessons[i][x][r] + "</td>";
+                txts[i] += "<td class = 'fach'>" + lessdata[i][x][r].oldSubject + "</td>";
+                txts[i] += "<td class = 'lehrer'>" + lessdata[i][x][r].oldTeachers[0].name + "</td>";
+
+                if(lessdata[i][x][r].type == "2"){ txts[i] += "<td class = 'vfach' style = 'color: red;'>" + "Ausfall" + "</td>";}
+                else{txts[i] += "<td class = 'vfach' >" + isAusfall(lessdata[i][x][r].newSubject) + "</td>";}   
+                               
+                //if(isAusfall(lessdata[i][x][r].newSubject) == "Ausfall"){ txts[i] += "<td class = 'vfach' style = 'color: red;'>" + isAusfall(lessdata[i][x][r].newSubject) + "</td>";}
+                //else{txts[i] += "<td class = 'vfach' >" + isAusfall(lessdata[i][x][r].newSubject) + "</td>";} 
+                
+                  if(lessdata[i][x][r].newTeachers.length == 0){txts[i] += "<td class = 'vlehrer'>" + " " + "</td>";}
+                  else{txts[i] += "<td class = 'vlehrer'>" + lessdata[i][x][r].newTeachers[0].name + "</td>";}
+                                
+                if(lessdata[i][x][r].type == "3") {
+
+                  if(lessdata[i][x][r].comment == null) {txts[i] += "<td class = 'kommentar'>" + "Stillarbeit" + "</td>";}
+                else{txts[i] += "<td class = 'kommentar'>" + "Stillarbeit: "+lessdata[i][x][r].comment + "</td>";}
+
+                }else{
+                  if(lessdata[i][x][r].comment == null) {txts[i] += "<td class = 'kommentar' style = 'color: transparent; -webkit-user-select: none;-khtml-user-select: none;-webkit-touch-callout : none;-moz-user-select: none;-o-user-select: none;user-select: none;'>" + "Fülltext" + "</td>";}
+                  else{txts[i] += "<td class = 'kommentar'>" + lessdata[i][x][r].comment + "</td>";}
+                }
+
+                isBlock = false;
+
+
+                txts[i] += "</tr>";
+              }
+
+            }
+            z1 += 1 
+          }
+          z1 = 0
+          //txts[i] += "</tbody>"
+          
+          txts[i] += "</table>"
+
+        }
+
+
+
+
+
+
+        window.onload = function() {
+            document.getElementById("tab0").innerHTML = txtstab0; // Ausgabe Container ID //
+            document.getElementById("tabhead").innerHTML = txthead; // Ausgabe Container ID //
+            
+
+            for(i=0;i<3;i++){
+              var id = "tab"+(i+1)
+              document.getElementById(id).innerHTML = txts[i]; // Ausgabe Container ID //
+              //var hid = "header"+(i+1)
+              //document.getElementById(hid).innerHTML = dateHeaderFormated(midL(json_obj.days[i],11)); // Ausgabe Container ID //
+            }
+
+            document.getElementById("newsWoche").innerHTML =  "<a class = 'newsWoche'>"+getWeekAoB(new Date(midL(days[0],10)))+"</a>"
+
+            clock();  
+            function clock() {
+            var now = new Date();
+            var TwentyFourHour = now.getHours();
+            var hour = now.getHours();
+            var min = now.getMinutes();
+            var sec = now.getSeconds();
+
+
+          document.getElementById('currentTime').innerHTML =midR("00"+hour,2)+':'+midR("00"+min,2)+':'+ midR("00"+sec,2) ;
+            setTimeout(clock, 1000);
+          }
+
+        }
+  </script>
+
+    <div class="vcontainer">
+      <div class="week">
+        <div id="tab0" style='padding-bottom: 20px;'><!--GET DATA--></div>
+        <div id="tabhead"><!--GET DATA--></div>
+        <div id="tab1"><!--GET DATA--></div>
+        <h3 id="header2"></h3>
+        <div id="tab2"><!--GET DATA--></div>
+        <h3 id="header3"></h3>
+        <div id="tab3"><!--GET DATA--></div>
+      </div>
+    </div>
+    <div id="news-bar" class="footer">
+        <div id="newsWoche" class="time">
+
+        </div>
+
+        <marquee direction="left" scrollamount="8" behavior="scroll" scrolldelay="60">
+          <a>Hitzefrei!!!: Heute (Mittwoch) aufgrund von erhöhter Temperatur in den Klassenräumen Hitzefrei ab 13:20 Uhr! Also - nach der Pause noch 60 Minuten Unterricht!</a>
+
+        </marquee>
+
+        <a id="currentTime"></a>
+
+    </div>
+
+</body>
+
+
+</html>
